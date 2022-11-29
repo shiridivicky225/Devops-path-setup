@@ -1,0 +1,29 @@
+hostnamectl set-hostname "nagios.rrtechnosoft.com"
+/bin/bash
+hostname 
+ls -lrt /etc/hosts
+cp -pv /etc/hosts /etc/hosts_
+ls -lrt /etc/hosts
+
+hostname 
+hostname -I
+vi /etc/hosts (save the ip address in this file )
+ip address 
+curl https://assets.nagios.com/downloads/nagiosxi/install.sh | sh
+
+configuration management tools
+**
+1.chef 
+2.puppet
+3.saltstack
+4.ansible
+
+mysql***
+
+*apt update
+*apt upgrade -y
+*apt install mysql-server -y
+*systemctl status mysql
+* ps -aux |grep "mysql"
+*
+continue

@@ -1,0 +1,64 @@
+==========Deployment file =========
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitlab-1
+spec:
+  selector:
+    matchLabels:
+      app: gitlab-1
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: gitlab-1
+    spec:
+      containers:
+        - name: gitlab-1
+          image: gitlab/gitlab-ce
+          ports:
+            - containerPort: 80
+
+
+kubectl apply -f <file name>
+eg: kubectl apply -f heloworld
+
+kubectl describe deployment <pod name>
+eg: kubectl describe deployment heloworld
+
+3.135.211.203
+
+============ service file ============
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gitlab-1
+spec:
+  selector:
+    app: gitlab-1
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+
+docker pull scandio/jfrog-artifactory
+--> to list services
+#kubectl get svc
+
+check load balance in same region --> select A record and paste in browser for checking
+
+
+
+
+
+
+
+
+
+
+
+
+

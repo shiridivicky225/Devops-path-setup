@@ -1,0 +1,66 @@
+#!/bin/bash
+
+# Update the Repository on Ubuntu 18.04
+sudo apt-get update 
+
+# Install required utility softwares 
+sudo apt-get install vim curl elinks unzip wget tree git -y
+
+# Download, Install Java 1.8 
+sudo apt-get install openjdk-8-jdk -y
+
+# Backup the Environment File
+sudo cp -pvr /etc/environment "/etc/environment_$(date +%F_%R)"
+
+# Create Environment Variables 
+echo "JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/" >> /etc/environment
+
+# Compile the Configuration 
+source /etc/environment
+
+# Go to /opt directory to download Apache Tomcat 
+cd /opt/
+
+# Download Apache Tomcat - Application
+sudo wget https://downloads.apache.org/tomcat/tomcat-8/v8.5.64/bin/apache-tomcat-8.5.64.tar.gz
+
+#echo "STEP-9 : Extract the Tomcat File" >> /tmp/tomcat-output.txt
+
+sudo tar xvzf apache-tomcat-8.5.64.tar.gz
+
+#echo "STEP-10 : Rename the Tomcat Folder" >> /tmp/tomcat-output.txt
+sudo mv apache-tomcat-8.5.64 tomcat 
+
+#echo "STEP-11 : Go Inside the Tomcat Folder" >> /tmp/tomcat-output.txt
+cd /opt/tomcat/
+
+# Take Tomcat Configuration as backup 
+sudo cp -pvr /opt/tomcat/conf/tomcat-users.xml "/opt/tomcat/conf/tomcat-users.xml_$(date +%F_%R)"
+
+# To delete last line and which contains </tomcat-users>
+sed -i '$d' /opt/tomcat/conf/tomcat-users.xml
+
+# STEP-12 : Add User & Attach Roles to Tomcat i.e. /opt/tomcat/conf/tomcat-users.xml" >> /tmp/tomcat-output.txt
+echo '<role rolename="manager-gui"/>'         >> /opt/tomcat/conf/tomcat-users.xml
+echo '<role rolename="manager-script"/>'       >> /opt/tomcat/conf/tomcat-users.xml
+echo '<role rolename="manager-jmx"/>'          >> /opt/tomcat/conf/tomcat-users.xml
+echo '<role rolename="manager-status"/>'      >> /opt/tomcat/conf/tomcat-users.xml
+echo '<role rolename="admin-gui"/>'            >> /opt/tomcat/conf/tomcat-users.xml
+echo '<role rolename="admin-script"/>'         >> /opt/tomcat/conf/tomcat-users.xml
+echo '<user username="admin" password="redhat@123" roles="manager-gui,manager-script,manager-jmx,manager-status,admin-gui,admin-script"/>' >> /opt/tomcat/conf/tomcat-users.xml
+echo "</tomcat-users>" >> /opt/tomcat/conf/tomcat-users.xml
+
+#echo "STEP-13 : Start Tomcat Server" >> /tmp/tomcat-output.txt
+cd /opt/tomcat/bin/
+./startup.sh
+
+
+# grep -H -n "|.*" webapps/host-manager/META-INF/context.xml
+webapps/host-manager/META-INF/context.xml:20:         allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1|.*" />
+
+# vim webapps/manager/META-INF/context.xml
+
+# grep -H -n "|.*" webapps/manager/META-INF/context.xml
+webapps/manager/META-INF/context.xml:20:         allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1|.*" />
+
+sed 's/unix/linux/g' geekfile.txt

@@ -1,0 +1,107 @@
+docker -v/--version --> to know docker version
+yum install docker -y --> to install docker engine
+systemctl status docker --> to know docker engine service status
+systemctl <start/stop/restart> docker --> to start/stop/restart docker engine
+docker info --> list info about docker engine (Engine Should be running)
+
+For Images, we have tags
+Default tag is : latest
+eg: <image name>:<tag>
+    tomcat:8.0
+if you dont specify tag after image name, it takes default tag
+
+Note: if any container is running against docker image, we can't delete that image
+docker images --> to list images from docker engine
+docker images -q --> to list only docker image id's from docker engine
+docker rmi <image name/id> --> to delete/remove image from D.E
+docker rmi -f <image name/id> --> to delete/remove image forcefully
+docker rmi $(docker images -q) --> to delete al images from D.E
+
+docker ps -a --> to list all containers (running & stoped)
+docker container ls --> to list running container
+docker ps --> to list running containers
+
+Services
+docker run --name <con name> -itd -p <ext port>:<con port> <image name/id> --> starting container on image for service (won't login into container)
+docker run --name <con name> -it -p <ext port>:<con port> <image name/id> --> starting & login container (service )
+
+OS/tools/db
+docker run --name <con name> -itd <image name/id> --> starts container for platform (dont login)
+docker run --name <con name> -it <image name/id> --> starts & Login container for platform
+
+docker exec -it <con id/name> options
+Options --> bash/sh
+
+We can start/run "n" of containers on same image
+
+-------- Dockerfile------------
+FROM <Base Image name> ---> Base image from docker hub
+MAINTAINER <Maintainer id/name> ---> Who write this docker file
+USER <User name> --> Container user name to login into container 
+EXPOSE <port number> --> specifying port number to open for container
+COPY <src file path> <dest path> --> For copying files from file system
+ADD <file uri> <dest path> --> for copying files from some cloud/web
+RUN <Any command> --> for executing any command
+WORKDIR <Path of work dir> --> where our app will run/user login path
+CMD [<command>]  --> Any Action should be performed while starting container
+
+Except CMD, remaing will execute while building image
+CMD, will execute while starting container
+
+-------------- Custom tomcat Dockerfile -----------------------
+FROM tomcat:8.0
+MAINTAINER 101010
+ADD <src Path of tomcat-users.xml> <dest path as per image description>
+ADD <src Path of context.xml> <dest path as per image description>
+ADD <src Path of sample.war> <dest path as per image description>
+EXPOSE 8080
+USER root
+WORKDIR /usr/local/tomcat/webapps
+CMD ["catalina.sh","run"]
+
+TO build docker image on dockerfile --> docker build -t <image name>:<tag> .
+
+to login to Docker hub from Engine
+--> docker login
+     provide credentials
+--> docker image tag
+     docker tag <existing image> <new image>
+--> to push docker image to hub
+     docker push <image>
+Note: images should be preceeded with docker hub acc id
+
+TO login to ECR in AWS
+ $(aws ecr get-login --no-include-email)
+--> docker image tag
+     docker tag <existing image> <new image>
+--> to push docker image to hub
+     docker push <image>
+
+Note: we can find push commands from "View Push Commands" ECR service
+
+AWS CLI Auth / Login
+------------------------------
+By Default in AWS EC2 instance, python 2.7
+install/check python (> 3.6) --> https://linuxize.com/post/how-to-install-python-3-on-centos-7/
+Downloading PIP tool --> curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+Installing Pip tool --> python get-pip.py
+Installing AWS CLI --> pip install awscli --> for install aws cli
+Configure AWS      ---> aws configure
+to check credentials --> /root/.aws/
+
+Docker ECR
+DOcker Image Writing
+
+
+/usr/share/tomcat/webapps/ROOT/index.html
+/usr/share/tomcat/webapps/
+
+/opt/tomcat/webapps/ROOT/index.html
+/opt/tomcat/webapps/
+
+AKIAXSZTF2NY7UZHFQSD
+xNd8Vga3Ud7dDmN7SKRzCampvN8JUjVPivxwDd4B
+
+
+
+

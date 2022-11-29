@@ -1,0 +1,57 @@
+======================================== Terraform Variables =======================================
+vi ec2.tf
+
+provider "aws" {
+ profile = "default"
+ region = "${var.region}"
+}
+
+resource "aws_instance" "myec2" {
+  ami = "${var.ami}"
+  instance_type = "${var.instance_type}"
+  subnet_id = "${var.subnet}"
+  security_groups = ["${var.security_group}"]
+}
+
+------------------------------------
+vi variables.tf
+
+variable "region" {
+  description = "this gives region description"
+  type = "string"
+}
+
+variable "ami" {
+  description = "this is for ami"
+  type = "string"
+}
+
+variable "instance_type" {
+  description = "this is for instance type"
+  type = "string"
+}
+
+variable "subnet" {
+  description = "this is for subnet"
+  type = "string"
+}
+
+variable "security_group" {
+  description = "this is for describe security groups"
+  type = "string"
+}
+
+------------------------------------------
+vi dev.tfvars
+
+region = "ap-south-1"
+ami = "ami-096122757b4163b0e"
+instance_type = "t2.micro"
+subnet = "subnet-d3f3dbbb"
+security_group = "sg-cdde52ac"
+
+
+terraform plan --var-file=dev.tfvars
+terraform apply --var-file=dev.tfvars
+
+

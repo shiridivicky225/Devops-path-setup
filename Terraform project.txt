@@ -1,0 +1,203 @@
+==== GIT --> JENKINS --> TERRAFORM ===========
+
+================== Launch GITLAB ===============
+================== Launch Jenkins =============
+
+AMI : CentOS Linux 7 x86_64 HVM EBS ENA 1901_01-b7ee8a69-ee97-4a49-9e68-afaee216db2e-ami-05713873c6794f575.4
+
+===== Place below code in GITLAB ======
+
+Jenkinsfile
+
+pipeline {
+  agent {label 'master'}
+
+    stages {
+        stage('git clone') {
+            steps {
+                echo 'cloning git repo'
+                git 'http://ec2-13-233-195-232.ap-south-1.compute.amazonaws.com/root/terraformproj.git'
+            }
+        }
+        
+        stage('Terraform Init') {
+            steps {
+                echo 'Init terra'
+                sh 'terraform init'
+            }
+        }
+        
+        stage('Terraform Validate') {
+            steps {
+                echo 'Init terra'
+                sh 'terraform validate'
+                sh 'terraform apply -auto-approve'
+            }
+        }
+    }
+}
+
+
+terraformfile.tf
+
+provider "aws" {
+ profile = "default"
+ region = "ap-northeast-1"
+}
+
+resource "aws_instance" "myec2" {
+  ami = "ami-045f38c93733dd48d" 
+  instance_type = "t2.micro"
+  subnet_id = "subnet-7f5f9837"
+  security_groups = ["sg-0129af68a2069d692"]
+}
+
+
+
+ec2terra.tf
+
+provider "aws" {
+ profile = "default"
+ region = "ap-south-1"
+}
+
+resource "aws_vpc" "myvpc" {
+  cidr_block = "192.168.4.0/24"
+  tags = {
+     Name = "myvpc"
+  }
+}
+
+resource "aws_subnet" "mysubnet1" {
+  vpc_id = "${aws_vpc.myvpc.id}"
+  cidr_block = "192.168.4.0/25"
+  tags = {
+     Name = "mysubnet-proj-1"
+   }
+}
+
+resource "aws_subnet" "mysubnet2" {
+  vpc_id = "${aws_vpc.myvpc.id}"
+  cidr_block = "192.168.4.128/25"
+  tags = {
+     Name = "mysubnet-proj-2"
+   }
+}
+
+resource "aws_security_group" "mysg" {
+   vpc_id = "${aws_vpc.myvpc.id}"
+   tags = {
+   	Name = "mysq"
+   }  
+   ingress {
+      protocol = "tcp"
+      from_port = 0
+      to_port = 65000
+      cidr_blocks = ["0.0.0.0/0"]
+   }
+   egress {
+      protocol = "tcp"
+      from_port = 0
+      to_port = 65500
+      cidr_blocks = ["0.0.0.0/0"]
+   }
+}
+
+
+resource "aws_instance" "myec2" {
+  ami = "ami-02e60be79e78fef21" 
+  instance_type = "t2.micro"
+  subnet_id = "${aws_subnet.mysubnet1.id}"
+  security_groups = ["${aws_security_group.mysg.id}"] 
+  user_data = <<-EOT
+             #! /bin/bash
+             cd /tmp
+             sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+             systemctl start amazon-ssm-agent
+             systemctl enable amazon-ssm-agent
+  EOT
+
+  tags = {
+     Name = "my-ssm-proj"
+   }
+  iam_instance_profile = "ssmrole"
+}
+
+
+===== Do below Steps in Jenkin Machine ==========
+
+give executive permission for jenkins user
+# usermod -s /bin/bash jenkins
+
+check python version
+# python --version
+
+====== pip tool installation for linux
+
+# curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+# python get-pip.py
+# pip install awscli --> for install aws cli
+
+======= Configure AWS CLI --- after changing to jenkins user ========
+change user to jenkins
+# su - jenkins
+
+aws configuration
+# aws configure
+    give details as per your account
+
+For cross check with AWS
+# aws s3 ls
+
+>> download terraform into jenkins m/s as root user
+
+
+curl -o https://releases.hashicorp.com/terraform/0.12.18/terraform_0.12.18_linux_amd64.zip
+
+unzip
+
+# yum install unzip
+
+# unzip terraform_0.12.18_linux_amd64.zip
+
+# cp terraform /usr/bin
+# cp terraform /usr/sbin
+# cp terraform /usr/local/bin
+
+check version of terraform which is installed
+# terraform --version
+
+===== change to jenkins user
+
+Now install boto with pip for managing AWS infra
+# pip install boto --user
+
+check version of terraform which is installed
+# terraform --version
+
+======== change to root user
+install git client
+# yum install git
+
+start jenkins service
+#systemctl enable jenkins
+#systemctl start jenkins
+
+=====================================================
+copy public url of jenkins machine and hit in browser
+<public ip>:8080
+
+=============================================
+>>> Install necessary Plugins
+
+>>> create a multipipeline job and point to git lab repo
+
+
+
+
+
+
+
+
+
+

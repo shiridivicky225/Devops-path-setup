@@ -1,0 +1,243 @@
+	--------------- Installations (Java, maven, web server, app server)----------------------
+1. Normal Process --> standard version & above we can install
+2. Distribution Process --> we can install any specific version
+    -- Download respective package from browser
+    -- Extract the compressed/downloaded package (.tar.gz)
+    -- set Env Variables/class path
+    -- update Env Variables
+
+for tools, we have versions
+ - standard version
+ - latest version
+
+Normal Process
+-----------------------------------
+sudo - use it before command
+in linux, we have package eg: java, maven, web server, app server
+linux --> yum (mackage manager)
+centos --> yum -- sudo update yum -y
+ubuntu --> apt apt-get --> sudo update apt-get -y 
+redhat --> rpm 
+tools: java, maven, python
+services: app server, web server, Docker, jenkins
+
+Centos (Normal Process) 
+--------------
+centos AMI : CentOS Linux 7 x86_64 HVM EBS ENA 1901_01-b7ee8a69-ee97-4a49-9e68-afaee216db2e-ami-05713873c6794f575.4
+JDK
+ JRE
+  JVM
+sudo yum update -y --> to update package manager
+
+java -version --> to check java version
+sudo yum install java-1.8.0-openjdk -y --> to install jdk/java
+
+mvn --version --> to check maven version
+sudo yum install maven -y --> to install maven
+Note: Maven is designed/developed on JAVA tool, install java before installing maven
+
+sudo systemctl status <service name> --> for service status
+
+sudo systemctl status httpd --> check httpd service status
+sudo yum install httpd -y --> to install web server (apache) - apache2
+Note: web server runs on http protocol - 80 port
+      copy public ip from aws console and hit in browser
+      web server --> /var/www/html/ (1st)
+                 --> /usr/share/httpd/noindex/ (2nd)
+
+sudo systemctl status tomcat --> check tomcat service status
+sudo yum install tomcat -y --> to install tomcat
+Note: tomcat is designed/developed on JAVA tool, install java before installing tomcat
+      app server - tomcat -- runs on port 8080 (default)
+
+sudo systemctl start <service name> --> starting service
+sudo systemctl stop <service name> --> stoping service
+sudo systemctl restart <service name> --> restarting service
+sudo systemctl status <service name> --> for service status
+sudo yum remove <name>  --> to uninstall/remove
+
+
+web server runs on http protocol - 80 port
+app server - tomcat -- runs on port 8080 (default)
+
+
+Tomcat --> usr/share/tomcat/webapps/ROOT/index.html --> web app --> <ip>:<port>
+           usr/share/tomcat/webapps/<sample name>.war --> App   --> <ip>:<port>/<artifact name>
+           usr/share/tomcat/conf/server.xml --> in this we change port number
+
+Sample App from Tomcat
+https://tomcat.apache.org/tomcat-7.0-doc/appdev/sample/sample.war
+to download from web --> wget <web url>
+sudo yum wget -y
+
+centos (Distribution Process) .tar, .tar.gz, .tar.bz2
+-----------------------------
+Install wget tool --> sudo yum install wget -y
+use firefox browser and browse for tools --> for copying web links for tools (java, maven, tomcat)
+Web url
+Java Home Page --> https://www.oracle.com/in/java/technologies/javase/javase-jdk8-downloads.html
+tomcat home page --> https://tomcat.apache.org/
+maven home page --> https://maven.apache.org/download.cgi
+
+#1 Download respective package
+      https://www.oracle.com/in/java/technologies/javase/javase-jdk8-downloads.html
+      wget <jdk web url from official site>
+      wget <maven web url from official site>
+#2 extract downloaded tool
+      tar -xzf <dir name>
+#3 set class path / Env variable
+      export JAVA_HOME="/opt/jdk1.8"
+      export PATH=$JAVA_HOME/bin:$PATH
+      export M2_HOME="/opt/maven3"
+      export PATH=$M2_HOME/bin:$PATH
+      export CATALINA_HOME="/opt/tomcat7"
+      export PATH=$CATALINA_HOME/bin:$PATH
+
+#4 update Env Variables
+
+/opt/tomcat/bin/
+to start tomcat service in dist process --> bash startup.sh
+to stop tomcat service in dist process --> bash shutdown.sh 
+
+Compress & Extractions 
+----------------------------
+3 compressions (.tar, .tar.gz, .tar.bz2)
+a.txt 
+tar -cf <name>.tar <file name> --> to compress in zip
+tar -czf <name>.tar.gz <file name --> gun zip
+tar -cjf <name>.tar.bz2 <file name> --> bun zip
+
+tar -xf <file name>.tar 
+tar -xzf <file name>.tar.gz
+tar -xjf <file name>.tar.bz2
+
+
+---------- Maven ---------------
+Maven is from Apache Org/Foundation
+Its Developed using Java Pathform/Tech.
+Its a Open Source 
+Maven is used for building app (Generating artifactry on top of app) to deploy into server service
+Before install maven, need to install java
+(Refer Install commands from installation.txt file)
+
+AMI : CentOS Linux 7 x86_64 HVM EBS ENA 1901_01-b7ee8a69-ee97-4a49-9e68-afaee216db2e-ami-05713873c6794f575.4
+
+Types of App
+.jar --> Standalone App --> App's Whose info is not shared over inter/intra N/W.  Eg: calculator, notepad file, Small restornat toke system
+.war --> Dynamic App    --> App's Whose info is shared over N/W. eg: Gmail, FB, Netbanking, insta, twitter
+.ear --> Enterprise App --> App's Whose info is shared over n/w & support AD (Active Directry) group. Eg: Office App
+
+pom --> Project Object Model
+Every Maven App/Projects will contain only one pom.xml file
+pom.xml --> Project Object Model
+In pom file, Developers/App Team Specify below info
+   <groupid>com.sageit</groupid> --> Which company is developing
+   <artifactid>ampservice</artifactid>     --> Name of App/Artifact
+   <package>war</package>           --> Type of Application
+   <version>1.1.2</version>         --> version of application
+   
+   <dependencies>
+       <dependency>
+      
+       </dependency>
+       <dependency>
+          <groupId>mysql</groupId>
+          <artifactId>mysql-connector-java</artifactId>
+          <version>5.1.6</version>
+       </dependency>
+   </dependencies>
+
+Dependencies are the plugins/jar files on which app is dependent for operation
+
+For Eg:
+   Java App ---> Uses MySQL JDBC dependency for connecting ----> MySQL DB
+
+
+Maven Goals (6)
+1. clean ---> mvn clean --> CLean maven workspace
+2. compile --> mvn compile --> Compiles the App SRC and check if any syntax errors are there. if there, goal will get fail
+3. test --> mvn test   --> executes the test cases if any written by developers & QA team and gives report on test cases execution
+4. package --> mvn package --> builds artifactry by considering packaging tag from pom.xml
+         maven package build artifact/package and places in target dir --> <artifactid>.<packaging>
+5. install ---> mvn install --> Install builded artifactry into maven local repo
+         Maven install, install package/artifact into local repo
+         syntax: <local repo>/<group name>/<artifactid>/<version>/<artifactid>-<version>.<package>
+         eg: /root/.m2/repository/com/srish/mvn-hello-world/1.1/mvn-hello-world-1.1.war
+6. deploy --> mvn deploy    --> deploys artifactry into local server service if any exists
+
+Maven goals are priority basis. i.e it follows priority from tom to bottom
+Eg: if specified executing goal is package, then it start executing from clean to package goals    
+
+Types of Maven repo
+1. Maven Org Repo --> it is maintained by Apache Org with all dependencies
+2. Our Org Repo   --> it is maintained by our Org, maitains only dependencies used/required for our org
+3. System Repo (Local Repo) --> it is available in system, for storing dependencies for next usage
+
+When you execute any goal of maven, first it checks for pom.xml in same directroy, if no pom.xml then goal execution fail
+
+Maven Project repo url : https://github.com/jagarlamudirajesh34/automaticdeployment.git
+
+Launch 2 instance
+1 centos
+2 ubuntu
+
+Centos:
+Connect to instance
+install jdk --> yum install java -y
+check java version ---> java -version
+Install Maven ----> yum install maven -y
+check Maven version --> mvn --version
+Install git client --> yum install git -y
+check git version --> git --version
+setup git client config
+     git config --global user.name <user name>
+     git config --global user.email <email>
+check config details
+    git config --list
+mkdir repos
+cd repo
+git init
+pull repo --> git clone <repo url>
+execute maven goals 
+
+Ubuntu:
+connect to instance
+install java --> apt-get install openjdk-8-jdk -y
+check java --> java -version
+install maven --> apt-get install maven -y
+check maven version --> mvn --version
+setup git client config
+     git config --global user.name <user name>
+     git config --global user.email <email>
+check config details
+    git config --list
+mkdir repos
+cd repo
+git init
+pull repo --> git clone <repo url>
+execute maven goals 
+
+In java have (JDK, JRE, JVM)
+JDK - Java Development Kit
+JRE - Java Run time Env
+JVM - Java Virtual Machine
+JDK
+ JRE
+  JVM
+when you install maven
+1. it checks for java 
+   if not available, it install JRE & JVM. NOT JDK
+
+
+
+
+
+
+
+
+
+
+
+
+
+

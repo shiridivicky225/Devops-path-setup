@@ -1,0 +1,46 @@
+Create two file
+
+1. backend.tf
+2. main.tf
+
+In backend.tf file write script for uploading state file to s3 bucket
+---> provide all your S3 bucket details
+
+for Example find below
+#vi backend.tf
+
+terraform {
+  backend "s3" {
+    bucket = "<bucket name>"
+    key    = "terraform.tfstate"
+    region = "<region name>"
+  }
+}
+
+In main.tf file write the resource creation script 
+--> provide all details of resource
+( if you want you can use variables concept here also)
+
+For Example
+#vi main.tf
+
+
+provider "aws" {
+ profile = "<profile name>"
+ region = "<region name>"
+}
+
+resource "aws_instance" "myec2" {
+  ami = "<copy value from aws console>" 
+  instance_type = "<instance type>"
+  subnet_id = "<copy subnet value from aws console>"
+  security_groups = ["<copy value from aws console>"]
+}
+
+execution steps are below
+#terraform init ----> for initialization
+#terraform validate ---> for validating
+#terraform apply ---> for applying tf script to provider
+terraform destroy --> for destroying created resource
+
+terraform apply --var-file=dev.tfvars

@@ -1,0 +1,47 @@
+==========Deployment file =========
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: webserver
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: webserver
+    spec:
+      containers:
+        - name: heloworld
+          image: centos/httpd
+          ports:
+            - containerPort: 80
+
+
+kubectl apply -f <file name>
+eg: kubectl apply -f heloworld
+
+kubectl describe deployment <pod name>
+eg: kubectl describe deployment heloworld
+
+
+============ service file ============
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "service-heloworld"
+spec:
+  selector:
+    matchLabels:
+      app: heloworld
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+
+--> to list services
+#kubectl get svc
+
+check load balance in same region --> select A record and paste in browser for checking

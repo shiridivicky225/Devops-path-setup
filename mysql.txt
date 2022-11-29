@@ -1,0 +1,58 @@
+ apt update 
+# apt upgrade -y 
+# apt install mysql-server -y 
+# ps -aux | grep mysql 
+# systemctl status mysql 
+
+SETUP Database for the First Time :
+
+mysql_secure_installation 
+
+n 
+y 
+n 
+n 
+y 
+
+
+# Connect the database from  putty/terminal :
+
+# mysql -uroot -predhat 
+or
+# mysql -u root -p
+
+
+Allow Root User to connect Remotely :
+
+STEP-1 : 
+
+vi /etc/mysql/mysql.conf.d/mysqld.cnf
+
+bind-address = 0.0.0.0
+
+STEP-2 : Connect Database from Linux Server 
+
+mysql -uroot -predhat123456
+
+mysql> GRANT ALL ON *.* to root@'%' IDENTIFIED BY 'redhat123456'; 
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql> FLUSH PRIVILEGES;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> exit;
+
+STEP-3 : Restart MySQL Daemon 
+
+systemctl status mysql 
+
+systemctl restart mysql 
+
+systemctl status mysql 
+
+STEP-4 : Go to Base Machine and Open MySQL WorkBench or Dbeavear 
+
+Hostname : 192.168.0.159
+Port : 3306
+UserName : root 
+Password : redhat123456

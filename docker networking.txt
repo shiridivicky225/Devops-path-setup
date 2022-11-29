@@ -1,0 +1,69 @@
+----------- Docker Network Commands ---------------
+
+docker network --help
+  connect - Connect a container to a network
+  create  - Create a network
+  disconnect - disconnect a container from a network
+  inspect - display detsiled info on one or more network
+  ls      - list networks
+  prune   - Remove all unused networks
+  rm      - Remove one or More networks
+
+docker containers will communicate with each other if, ther are in same n/w
+docker inspect <con name/id> --> to display con info
+docker inspect <networkName> --> to display info about N/W
+docker network ls --> to list all available n/w in Docker Engine
+docker network create <networkName> --> to create N/W
+docker run -p 8080:8080 --name containerName -d -it <imagename> --> to start/run container
+docker run -p 8080:8080 --name containerName -d -it --net <networkName> <imagename>
+docker run -p 8080:8080 --name containerName -it --net <networkName> <imagename> /bin/bash
+docker network connect <networkName> <containerName/id> --> Connecting Container to N/w
+docker exec -it containerName options --> login to a container
+docker network disconnect <networkName> <containerName> --> to disconnect cointainer from N/W
+docker network rm <networkName> --> to remove particular N/W
+docker network prune --> to remove/delete unused n/w
+docker inspect -f "{{ .NetworkSettings.Networks.network2.IPAddress }}" <container name> --> to display ip address of containers
+docker container ls <==> docker ps
+docker ps -f "status=running" -a --> to list only running containers
+docker ps -f "status=exited" -a --> to list not running containers
+
+Options: sh/bash
+
+Docker Swam
+-----------------------------------
+Open port
+2377, 7946, 4789  -- TCP
+Launch 3 instances (1 for manager, 2 for nodes)
+import docker repo in all instances
+  yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  yum install docker-ce -y
+  systemctl start docker
+  systemctl enable docker
+  systemctl status firewalld
+ping 1-1 servers
+check docker info
+
+Now On Manager Node
+docker swarm init --advertise-addr 13.233.100.166
+      after executing, find info
+      copy the command, which need to be executed in nodes
+      so that nodes will be joining to manager
+docker info
+    check swam mode (active or any other status & behaving as manager or not)
+    docker root dir
+docker node ls
+Execute above copied command in other instances which are acting as nodes in our system
+after executing
+docker node ls
+docker node inspect <node name>
+docker node inspect <node name> --pretty
+
+Some Usefull commands
+
+docker node promote <node> --> promote the node as manager
+docker node demote <node> ---> demote the node from Manager role
+docker swarm leave  ---> Node leaves the cluster
+docker node rm <node>   --> removes the node from cluster
+
+---- to get tocken ----
+docker swarm join-token manager  --> to display token to join nodes
