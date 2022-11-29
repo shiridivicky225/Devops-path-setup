@@ -1,0 +1,50 @@
+------------------------------------------------------------------------------------------------------------------------
+MasterNOde:-:
+
+    swapoff -a
+    sudo reboot
+    sudo apt-get update
+    sudo apt-get install -y docker.io
+    sudo systemctl status docker.service
+    sudo systemctl enable docker.service
+    sudo apt install -y apt-transport-https
+    sudo apt-get install curl
+    sudo curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+    sudo apt-add-repository "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+    sudo apt-get install -y kubelet kubeadm kubectl
+    sudo apt-mark hold kubelet kubeadm kubectl
+    sudo sed -i "s/cgroup-driver=systemd/cgroup=driver=cgroupfs/g" /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+    sudo systemctl daemon-reload
+    sudo systemctl restart kubelet
+    sudo kubeadm init --pod-network-cidr=192.168.10.0/24
+    sudo mkdir -p $HOME/.kube
+    sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+    sudo chown $(id -u):$(id -g) $HOME/.kube/config
+    kubeadm version
+    kubectl get nodes
+    sudo kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
+------------------------------------------------------------------------------------------------------------------------
+WorkerNode:-:
+
+     swapoff -a
+     sudo reboot
+     sudo apt-get update
+     sudo apt-get install -y docker.io
+     sudo systemctl status docker.service
+     sudo sytemctl enable docker.service
+     sudo systemctl enable docker.service
+     sudo apt install -y apt-transport-https
+     sudo apt-get install curl
+     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+     sudo apt-add-repository "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+     sudo apt-get install -y kubelet kubeadm kubectl
+     sudo apt-mark hold kubelet kubeadm kubectl
+     sudo sed -i "s/cgroup-driver=systemd/cgroup=driver=cgroupfs/g" /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+     sudo systemctl daemon-reload
+     sudo systemctl restart kubelet
+     kubeadm join 172.31.18.90:6443 --token c8pk0x.ofupg0a5r3zdxq0l --discovery-token-ca-cert-hash sha256:5a71f1b1fb9c56bb04cdce9752f91abc7836985af92b0f74dce23b552cace2dc
+    
+
+
+
+   

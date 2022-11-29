@@ -1,0 +1,15 @@
+provider "aws"{
+    acess_key = "Acess key"
+    secret_key = "Secret key"
+    region = "us-east-2"
+}
+ 
+resource "aws_instance" "terrfromexample"{
+  ami              = "ami-2542672"
+  instance_type = "t2.micro"
+}
+
+resource "aws_s3_bucket"
+
+ 
+

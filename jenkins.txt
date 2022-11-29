@@ -1,0 +1,119 @@
+jenkins setup:--****
+
+yum update -y
+
+yum install java-1.8.0-openjdk  -y
+ 
+java -version
+
+
+yum -y install wget
+
+cd opt/
+
+wget https://dlcdn.apache.org/maven/maven-3/3.8.6/binaries/apache-maven-3.8.6-bin.tar.gz
+
+tar -xzvf apache-maven-3.8.6-bin.tar.gz
+
+setup java nad maven path in server***:----
+
+
+export JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.332.b09-1.amzn2.0.2.x86_64"
+
+export PATH=$JAVA_HOME/bin:$PATH
+
+echo $JAVA_HOME
+
+****check the path:--
+
+/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.332.b09-1.amzn2.0.2.x86_64
+
+
+export M2_HOME="/opt/apache-maven-3.8.6"
+
+export PATH=$M2_HOME/bin:$PATH
+
+echo $PATH
+
+***check the path:--
+
+/opt/apache-maven-3.8.6/bin:/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.332.b09-1.amzn2.0.2.x86_64/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+source ~/.bash_profile
+
+
+***:-- jenkins install package ---:****
+
+wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+
+
+rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+
+
+yum install jenkins -y
+
+systemctl start jenkins
+
+systemctl status jenkins
+
+chkconfig jenkins on
+
+
+jenkins DASHboard*----
+ 
+vi   /var/lib/jenkins/secrets/initialAdminPassword
+
+copy password and paste in jenkins dashboard
+
+7e3a91ff686841df9d9dcf01c7629e06
+
+click on continue
+
+nextstep:--
+
+Customize Jenkins
+
+next click on install suggested plugins
+
+next step:--
+
+Create First Admin User
+
+Username:
+shiridi41
+
+Password:
+•••••••
+
+Confirm password:
+•••••••
+
+Full name:
+shiridi sai nadh
+
+E-mail address:
+jenkins@gmail.com
+
+next step:--
+
+save and continue
+
+next step:--
+
+Instance Configuration
+
+Jenkins URL:	
+http://18.204.17.4:8080/
+
+next step:-
+
+save and finish
+
+Jenkins is ready!
+
+Your Jenkins setup is complete.
+
+
+jenkins document url :--
+
+https://www.ktexperts.com/how-to-install-jenkins-in-amazon-linux-machine/

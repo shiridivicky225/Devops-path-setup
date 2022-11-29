@@ -1,0 +1,4 @@
+https://sourceforge.net/projects/nagios/files/nagios-4.x/nagios-4.0.8/nagios-4.0.8.tar.gz
+https://nagios-plugins.org/download/nagios-plugins-2.3.3.tar.gz
+https://sourceforge.net/projects/nagios/files/nagios-4.x/nagios-4.4.7/nagios-4.4.7.tar.gz
+http://prdownloads.sourceforge.net/sourceforge/nagios/nagios-4.0.8.tar.gz

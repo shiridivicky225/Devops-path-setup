@@ -1,0 +1,6 @@
+wget -O jfrog-artifactory-pro.tar.gz "https://releases.jfrog.io/artifactory/artifactory-pro/org/artifactory/pro/jfrog-artifactory-pro/[RELEASE]/jfrog-artifactory-pro-[RELEASE]-linux.tar.gz"
+
+
+tar -xvzf jfrog-artifactory-pro.tar.gz
+
+./artifactory-pro*/app/bin/artifactoryctl start

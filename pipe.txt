@@ -1,0 +1,24 @@
+pipeline {
+  agent any
+  stages {
+    stage('First') {
+      steps { echo 'Hello' }
+      post { success { echo 'First stage is success' } }
+    }
+    stage('Second') {
+      steps { sh """ echo '<testsuite errors="1" failures="0" name="test" skipped="0" tests="1" time="1"><testcase classname="" file="file.txt" name="name" time="0.000"><error message="error"></error></testcase></testsuite>' > test-results.xml """ }
+      post {
+        always { junit 'test-results.xml' }
+        unstable { echo 'Second stage is unstable' }
+      }
+    }
+    stage('Third') {
+      steps { echo 'Hello' }
+      post {
+        success { echo 'Third stage is success' }
+        unstable { echo 'Third stage is unstable! really???' }
+      }
+    }
+  }
+  post { unstable { echo 'Job is unstable' } }
+}

@@ -1,0 +1,56 @@
+---
+apiVersion: apps/v1
+ 
+kind: Deployment  # Kubernetes resource kind we are creating
+
+metadata:
+
+  name: spring-boot-ks8
+
+spec:
+
+  selector:
+
+    matchlabels:
+
+      app: spring-boot-ks8
+
+  replicas: 2 # Number of replicas that will be created for this deployment
+
+  template:
+
+    metadata:
+
+      labels:
+
+        app: spring-booot-ks8
+
+    spec:
+
+      containers:
+
+         - name: spring-boot-ks8
+
+           image: springboot-k8s-example:1.0 # Image that will be used to containers in the cluster
+
+           imagePullPolicy: TfNotPresent
+
+           ports:
+
+             - containersport:8080 # The port that the containers is running on in the cluster   
+
+
+
+
+
+After add this file in the repo and then run this command:
+
+*kubectl apply -f (write the yaml file name )
+
+check the deployment 
+  
+*kubectl get deployment
+
+*kubectl get pods
+
+

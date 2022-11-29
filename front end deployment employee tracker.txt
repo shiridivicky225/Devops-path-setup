@@ -1,0 +1,59 @@
+np 1  cd /
+    2  clear
+    3  apt-get update && apt-get upgrade && apt-get install curl gnupg2 gcc g++ make libssl-dev -y
+    4  curl -sL https://deb.nodesource.com/setup_current.x -o nodesource_setup.sh && bash nodesource_setup.sh
+    5  apt-get install nodejs -y && npm install npm@latest -g
+    6  node --version && npm --version
+    8  npm -g install create-react-app
+    *** create-react-app --version
+   10  apt-get install git -y
+   12  git clone https://github.com/shiridivicky225/EmployeeTracker.git
+   13  ls
+   14  cd EmployeeTracker/
+   15  ls
+   16  npm install
+   17  npm run build
+   19  cd ..
+****
+apt-get install nginx python3-certbot-nginx -y
+   20   
+   21  cd EmployeeTracker/
+   22  ls
+   23  cd build/
+   24  ls
+   25  pwd
+mkdir /var/www/html/EmployeeTracker/
+   
+   27  cp -r /front-en/EmployeeTracker-newVersion/build/* /var/www/html/EmployeeTracker/
+   28  chown -R www-data:www-data /var/www/html/EmployeeTracker/
+   30  vi /etc/nginx/conf.d/EmployeeTracker.conf
+pathsetup::
+
+       server {
+         listen 80;
+         listen [::]:80;
+         root /var/www/html/EmployeeTracker/;
+         index index.php index.html index.htm index.nginx-debian.html;
+         # MODIFICAR EJEMPLO DE SERVER_NAME
+         server_name 34.201.112.224;
+         location / {
+              try_files $uri /index.html;
+         }
+
+           location ~ \.php$ {
+                include snippets/fastcgi-php.conf;
+                fastcgi_pass unix:/run/php/php7.0-fpm.sock;
+        }
+        location ~ /\.ht {
+                deny all;
+        }
+
+
+}
+   31  clear
+   32  nginx -t
+   33  systemctl restart nginx
+   34  systemctl status nginx
+   35  clear
+   36  history
+***** certbot --nginx -d react.ejemplo.com --redirect

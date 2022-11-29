@@ -1,0 +1,91 @@
+*****
+FROM maven:3.8.6-jdk-11-slim AS MAVEN_TOOL_CHAIN
+
+COPY pom.xml /tmp/
+
+COPY src /tmp/src/
+
+WORKDIR /tmp/
+
+RUN mvn package
+
+# for deploy
+
+FROM tomcat:8.5.82-alpine
+
+MAINTAINER "admin"
+
+USER root
+
+# to get access to admin page
+
+COPY --from=MAVEN_TOOL_CHAIN /tmp/target/LESM-Status-Monitor-0.0.1-SNAPSHOT.war /usr/local/tomcat/webapps
+
+EXPOSE 8080
+
+CMD ["catalina.sh", "run"]
+
+
+
+
+
+
+---------------------
+FROM tomcat:8.0.20-jre8
+# Dummy text to test
+COPY target/LESM-Status-Monitor-0.0.1-SNAPSHOT.war /usr/local/tomcat/webapps/LESM-Status-Monitor-0.0.1-SNAPSHOT.war
+COPY target/LESM-Status-Monitor-0.0.1-SNAPSHOT.war.original /usr/local/tomcat/webapps/LESM-Status-Monitor-0.0.1-SNAPSHOT.war.original
+ 
+
+
+
+----------------------------
+FROM maven:3.6.3-jdk-11-slim AS MAVEN_TOOL_CHAIN
+
+
+
+COPY pom.xml /tmp/
+
+
+
+COPY src /tmp/src/
+
+
+
+WORKDIR /tmp/
+
+
+
+RUN mvn package
+
+
+
+# for deploy
+
+
+
+FROM tomcat:9.0-alpine
+
+
+
+MAINTAINER "admin"
+
+
+
+USER root
+
+
+
+# to get access to admin page
+
+
+
+COPY --from=MAVEN_TOOL_CHAIN /tmp/target/LESM-Status-Monitor-0.0.1-SNAPSHOT.war /usr/local/tomcat/webapps
+
+
+
+EXPOSE 8080
+
+
+
+CMD ["catalina.sh", "run"]
